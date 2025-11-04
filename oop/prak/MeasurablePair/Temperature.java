@@ -16,7 +16,7 @@ public final class Temperature implements Measurable<Temperature> {
     //    Gunakan Double.compare(<Temperature objek ini> , <Temperature objek lain>) untuk mendapatkan hasil perbandingan.
 
     public int compareTo(Temperature other){
-        return Double.compare(this.compareTo(other), other.compareTo(this));
+        return Double.compare(this.getValue(), other.getValue());
     }
 
     @Override

@@ -20,4 +20,4 @@ public final class Main {
 
         System.out.println(PairComparator.isGreater(standardPair, specializedPair));
     }
-}
+}   

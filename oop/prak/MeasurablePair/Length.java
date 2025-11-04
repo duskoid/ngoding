@@ -12,12 +12,12 @@ public class Length implements Measurable<Length> {
     // 1. Implementasikan fungsi getValue untuk mengembalikan nilai panjang dalam variabel yang telah disimpan.
     // 2. Implementasikan fungsi compareTo untuk membandingkan nilai panjang objek ini dengan objek lain.
     //    Gunakan Double.compare(Panjang objek ini, panjang objek lain) untuk mendapatkan hasil perbandingan.
-
     public double getValue(){
         return meters;
     }
-
-    public double compareTo(Length other){
+    
+    @Override
+    public int compareTo(Length other){
         return Double.compare(this.getValue(), other.getValue());
     }
 
