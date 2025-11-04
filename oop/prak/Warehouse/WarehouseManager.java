@@ -71,18 +71,19 @@ public class WarehouseManager {
    * @return number of items actually transferred
    */
   public static <T> int transferItems(Container<T> source, Container<T> destination, int count) {
-    // TODO: Implement
-	int deleted = 0;
-    for (T item : source.getItems()){
-		if (source.getCurrentSize() > 0 && count > 0){
-			destination.addItem(item);
-			source.removeItem(item);
-			deleted++;
-			count--;
-		}
-	}
-	return deleted;
-  }
+    int deleted = 0;
+    List<T> itemsCopy = new ArrayList<>(source.getItems());
+    
+    for (T item : itemsCopy){
+        if (deleted >= count) break;
+        
+        if (destination.addItem(item)){ 
+            source.removeItem(item);
+            deleted++;
+        }
+    }
+    return deleted;
+}
 
   /**
    * Generic method to count items in a shelf
