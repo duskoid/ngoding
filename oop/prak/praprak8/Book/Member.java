@@ -110,6 +110,32 @@ public class Member {
 	}
 
 	public void borrowBook(String bookTitle) throws LibraryException{
+		if (isActive() == false){
+			throw new LibraryException("member tidak aktif", "MEMBER_INACTIVE");
+		}
+		if (getBorrowedBooks().contains(bookTitle)){
+			throw new LibraryException(String.format("Anggota %s sudah meminjam buku '%s'.", getName(), bookTitle), "ALREADY_BORROWED");
+		}
+		if (!(getCurrentBorrowedCount() <= getMaxBorrowLimit())){
+			throw new LibraryException(String.format("Anggota %s telah mencapai batas peminjaman (%d/%d).", getName(), getCurrentBorrowedCount(), getMaxBorrowLimit()), "LIMIT_EXCEEDED");
+		}
 		
+		getBorrowedBooks().add(bookTitle);
+	}
+
+	public void returnBook(String bookTitle) throws LibraryException{
+		if (!hasBorrowedBook(bookTitle)){
+			throw new LibraryException(String.format("Anggota %s tidak meminjam buku '%s'.", getName(), bookTitle), "NOT_BORROWED");
+		}
+
+	}
+
+	public boolean hasBorrowedBook(String bookTitle){
+		return borrowedBooks.contains(bookTitle);
+	}
+
+	@Override
+	public String toString(){
+		return String.format("%s (ID: %s) - Borrowed: %d/%d", getName(), getMemberId(), getCurrentBorrowedCount(), getMaxBorrowLimit());
 	}
 }

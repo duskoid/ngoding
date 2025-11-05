@@ -136,4 +136,32 @@ import java.util.Map;
 
 public class Library {
     // TODO: Implement all methods with proper exception handling
+    private Book[] books;
+	private int bookCount;
+	private Map<String, Member> members;
+
+	public Library(int capacity){
+		books = new Book[capacity];
+		bookCount = 0;
+		members = new HashMap<>();
+	}
+
+	public void addBook(Book b){
+		if (b == null){
+			throw new NullPointerException(); 
+		}
+		if (bookCount >= books.length){
+			throw new IllegalStateException();
+		}
+		books[bookCount] = b;
+		bookCount++;
+	}
+
+	public void registerMember(Member m) throws LibraryException{
+		if (m == null) throw new LibraryException("woilah", "INVALID_MEMBER");
+		if (members.containsKey(m.getMemberId())) throw new LibraryException("woilah", "DUPLICATE_MEMBER");
+		members.put(m.getMemberId(), m);
+	}
+
+	
 }
