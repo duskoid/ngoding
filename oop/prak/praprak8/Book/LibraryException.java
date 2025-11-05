@@ -10,7 +10,7 @@
    2. LibraryException(String message, Throwable cause) - untuk exception chaining
    3. LibraryException(String message, String errorCode)
    4. LibraryException(String message, String errorCode, Throwable cause)
-
+s
    Methods yang dibutuhkan:
    - getErrorCode(): mengembalikan error code
    - getTimestamp(): mengembalikan timestamp
@@ -21,8 +21,49 @@
 
 public class LibraryException extends Exception {
     // TODO: Tambahkan fields
+    private String errorCode;
+    private long timestamp;
 
     // TODO: Lengkapi constructors
+    public LibraryException(String message) {
+        super(message);
+        timestamp = System.currentTimeMillis();
+    }
 
-    // TODO: Lengkapi methods
+    public LibraryException(String message, Throwable cause) {
+        super(message, cause);
+        timestamp = System.currentTimeMillis();
+    }
+
+    public LibraryException(String message, String errorCode) {
+        super(message);
+        this.errorCode = errorCode;
+        timestamp = System.currentTimeMillis();
+    }
+
+    public LibraryException(String message, String errorCode, Throwable cause) {
+        super(message, cause);
+        this.errorCode = errorCode;
+        timestamp = System.currentTimeMillis();
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
+    }
+
+    @Override
+    public String getMessage() {
+        String base = super.getMessage();
+        if (errorCode != null && !errorCode.isEmpty()) {
+            if (base == null || base.isEmpty()) {
+                return "[" + errorCode + "]";
+            }
+            return "[" + errorCode + "] " + base;
+        }
+        return base;
+    }
 }

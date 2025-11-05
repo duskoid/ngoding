@@ -23,4 +23,49 @@
 
 public class InvalidBookException extends LibraryException {
     // TODO: Implementasi
+    private String bookTitle;
+    private String invalidField;
+    private String invalidValue;
+
+    public InvalidBookException(String message){
+        super(message, "INVALID_BOOK");
+    }
+
+    public InvalidBookException(String message, Throwable cause){
+        super(message, "INVALID_BOOK", cause);
+    }
+
+    public InvalidBookException(String message, String bookTitle, String invalidField){
+        super(message, "INVALID_BOOK");
+        this.bookTitle = bookTitle;
+        this.invalidField = invalidField;
+    }
+
+    public InvalidBookException(String message, String bookTitle, String invalidField, String invalidValue){
+        super(message, "INVALID_BOOK");
+        this.bookTitle = bookTitle;
+        this.invalidField = invalidField;
+        this.invalidValue = invalidValue;
+    }
+
+    public String getBookTitle(){
+        return bookTitle;
+    }
+
+    public String getInvalidField(){
+        return invalidField;
+    }
+
+    public String getInvalidValue(){
+        return invalidValue;
+    }
+
+    @Override
+    public String getMessage(){
+        if (getInvalidValue() != null){
+            return String.format("%s (Book: '%s', Invalid Field: %s, Value: %s)", super.getMessage(), getBookTitle(), getInvalidField(), getInvalidValue());
+        } else {
+            return String.format("%s (Book: '%s', Invalid Field: %s)", super.getMessage(), getBookTitle(), getInvalidField());
+        }   
+    }
 }

@@ -54,4 +54,62 @@ import java.util.List;
 
 public class Member {
     // TODO: Implementasi class Member dengan exception handling
+    private String name;
+	private String memberId;
+	private int maxBorrowLimit;
+	private List<String> borrowedBooks;
+	private boolean isActive;
+
+	public Member(String name, String memberId, int maxBorrowLimit) throws LibraryException {
+		String errCode = "INVALID_MEMBER";
+		if (name == null || name.trim().isEmpty()){
+			throw new LibraryException("name tidak boleh null/kosong", errCode);
+		} 
+
+		if (memberId == null || memberId.trim().isEmpty()){
+			throw new LibraryException("memberId tidak boleh null/kosong", errCode);
+		}
+
+		if (!(maxBorrowLimit > 0)){
+			throw new LibraryException("maxBorrowLimit harus > 0", errCode);
+		}
+
+		borrowedBooks = new ArrayList<>();
+		isActive = true;
+		this.name = name.trim();
+		this.memberId = memberId.trim();
+		this.maxBorrowLimit = maxBorrowLimit;
+	}
+
+	public String getName(){
+		return name;
+	}
+
+	public String getMemberId(){
+		return memberId;
+	}
+
+	public int getMaxBorrowLimit(){
+		return maxBorrowLimit;
+	}
+
+	public List<String> getBorrowedBooks(){
+		return new ArrayList<>(borrowedBooks);
+	}
+
+	public boolean isActive(){
+		return isActive;
+	}
+
+	public int getCurrentBorrowedCount(){
+		return borrowedBooks.size();
+	}
+
+	public void setActive(boolean active){
+		isActive = active;
+	}
+
+	public void borrowBook(String bookTitle) throws LibraryException{
+		
+	}
 }

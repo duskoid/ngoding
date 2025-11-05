@@ -18,4 +18,35 @@
 
 public class BookNotAvailableException extends LibraryException {
     // TODO: Implementasi
+    private String bookTitle;
+    private int requestedCopies;
+    private int availableCopies;
+
+    public BookNotAvailableException(String message){
+        super(message, "BOOK_NOT_AVAILABLE");
+    }
+
+    public BookNotAvailableException(String message, String bookTitle, int requestedCopies, int availableCopies){
+        super(message, "BOOK_NOT_AVAILABLE");
+        this.bookTitle = bookTitle;
+        this.requestedCopies = requestedCopies;
+        this.availableCopies = availableCopies;
+    }
+
+    public String getBookTitle(){
+        return bookTitle;
+    }
+
+    public int getRequestedCopies(){
+        return requestedCopies;
+    }
+
+    public int getAvailableCopies(){
+        return availableCopies;
+    }
+
+    @Override
+    public String getMessage(){
+        return String.format("%s (Book: '%s', Requested: %d, Available: %d)", super.getMessage(), getBookTitle(), getRequestedCopies(), getAvailableCopies());
+    }
 }
