@@ -8,34 +8,17 @@ import java.util.Map;
    - bookCount (int): jumlah buku saat ini
    - members (Map<String, Member>): HashMap untuk menyimpan member (key: memberId)
 
-   Constructor:
-   - Library(int capacity)
-     * Inisialisasi books array dengan size capacity
-     * Set bookCount = 0
-     * Inisialisasi members sebagai new HashMap<>()
+   
 
    Methods:
 
-   1. void addBook(Book book)
-      * Jika book null: throw NullPointerException
-      * Jika bookCount >= books.length: throw IllegalStateException
-      * Tambah book ke array, increment bookCount
+   1. 
 
-   2. void registerMember(Member member) throws LibraryException
-      * Jika member null: throw LibraryException dengan errorCode "INVALID_MEMBER"
-      * Jika members.containsKey(member.getMemberId()): throw LibraryException dengan errorCode "DUPLICATE_MEMBER"
-      * members.put(member.getMemberId(), member)
+   2. 
 
-   3. Member findMember(String memberId) throws LibraryException
-      * Jika memberId null/kosong: throw LibraryException dengan errorCode "INVALID_MEMBER"
-      * Get member dari map
-      * Jika null: throw LibraryException dengan errorCode "MEMBER_NOT_FOUND"
-      * Return member
+   3. 
 
-   4. Book findBook(String title)
-      * Jika title null: return null
-      * Loop books array, bandingkan dengan equalsIgnoreCase
-      * Return book jika ditemukan, null jika tidak
+   4. 
 
    5. Book findBookByISBN(String isbn) throws InvalidBookException
       * Jika isbn null/kosong: throw InvalidBookException
@@ -136,17 +119,26 @@ import java.util.Map;
 
 public class Library {
     // TODO: Implement all methods with proper exception handling
-    private Book[] books;
+  private Book[] books;
 	private int bookCount;
 	private Map<String, Member> members;
 
 	public Library(int capacity){
+    /*Constructor:
+   - Library(int capacity)
+     * Inisialisasi books array dengan size capacity
+     * Set bookCount = 0
+     * Inisialisasi members sebagai new HashMap<>() */
 		books = new Book[capacity];
 		bookCount = 0;
 		members = new HashMap<>();
 	}
 
 	public void addBook(Book b){
+    /*void addBook(Book book)
+      * Jika book null: throw NullPointerException
+      * Jika bookCount >= books.length: throw IllegalStateException
+      * Tambah book ke array, increment bookCount */
 		if (b == null){
 			throw new NullPointerException(); 
 		}
@@ -158,15 +150,35 @@ public class Library {
 	}
 
 	public void registerMember(Member m) throws LibraryException{
+    /*void registerMember(Member member) throws LibraryException
+      * Jika member null: throw LibraryException dengan errorCode "INVALID_MEMBER"
+      * Jika members.containsKey(member.getMemberId()): throw LibraryException dengan errorCode "DUPLICATE_MEMBER"
+      * members.put(member.getMemberId(), member) */
 		if (m == null) throw new LibraryException("woilah", "INVALID_MEMBER");
 		if (members.containsKey(m.getMemberId())) throw new LibraryException("woilah", "DUPLICATE_MEMBER");
 		members.put(m.getMemberId(), m);
 	}
 
 	public Member findMember(String memberId) throws LibraryException{
+    /*Member findMember(String memberId) throws LibraryException
+      * Jika memberId null/kosong: throw LibraryException dengan errorCode "INVALID_MEMBER"
+      * Get member dari map
+      * Jika null: throw LibraryException dengan errorCode "MEMBER_NOT_FOUND"
+      * Return member */
 		if (memberId == null || memberId.isEmpty()) throw new LibraryException("Woi", "INVALID_MEMBER");
 		Member mem = members.get(memberId);
 		if (mem == null) throw new LibraryException("Woilahcik", "MEMBER_NOT_FOUND");
 		return mem;
+	}
+
+	public Book findBook(String title){
+    /*Book findBook(String title)
+      * Jika title null: return null
+      * Loop books array, bandingkan dengan equalsIgnoreCase
+      * Return book jika ditemukan, null jika tidak */
+		if (title == null) return null;
+		for (Book b : books){
+			if (b.)
+		}
 	}
 }
