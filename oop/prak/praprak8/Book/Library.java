@@ -163,5 +163,10 @@ public class Library {
 		members.put(m.getMemberId(), m);
 	}
 
-	
+	public Member findMember(String memberId) throws LibraryException{
+		if (memberId == null || memberId.isEmpty()) throw new LibraryException("Woi", "INVALID_MEMBER");
+		Member mem = members.get(memberId);
+		if (mem == null) throw new LibraryException("Woilahcik", "MEMBER_NOT_FOUND");
+		return mem;
+	}
 }

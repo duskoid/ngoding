@@ -33,33 +33,164 @@
      * Jika length 13: return isValidISBN13(cleanISBN)
      * Otherwise: return false
 
-   - boolean isValidISBN10(String isbn)
-     * ISBN-10 checksum algorithm:
-       - Sum = (digit1 × 10) + (digit2 × 9) + ... + (digit9 × 2) + check_digit
-       - Check digit bisa 'X' (nilai 10) atau digit 0-9
-       - Valid jika Sum % 11 == 0
-     * Gunakan try-catch untuk handle exceptions, return false jika error
+   
 
-   - boolean isValidISBN13(String isbn)
-     * ISBN-13 checksum algorithm:
-       - Sum = digit1 + (digit2 × 3) + digit3 + (digit4 × 3) + ... + digit13
-       - Digit ganjil (index 0,2,4...) × 1, digit genap (index 1,3,5...) × 3
-       - Valid jika Sum % 10 == 0
-     * Gunakan try-catch, return false jika error
+   
 
    Public Methods:
 
    - getters untuk semua fields (getTitle, getAuthor, getIsbn, getPublicationYear, getCopies, getAvailableCopies)
 
-   - void borrowBook() throws BookNotAvailableException
-     * Jika availableCopies <= 0: throw BookNotAvailableException dengan detail (title, requestedCopies=1, availableCopies)
-     * Kurangi availableCopies
+   
 
    - void returnBook() throws InvalidBookException
      * Jika availableCopies >= copies: throw InvalidBookException
      * Tambah availableCopies
 
-   - toString(): return format string
+   
+*/
+
+public class Book {
+	// TODO: Declare fields
+	private String title;
+	private String author;
+	private String isbn;
+	private int publicationYear;
+	private int copies;
+	private int availableCopies;
+
+	// TODO: Implement constructor dengan validasi lengkap
+	public Book(String title, String author, String isbn, int publicationYear, int copies) throws InvalidBookException {
+		if (title == null || title.trim().isEmpty())
+			throw new InvalidBookException("anuan", title, "title");
+		if (author == null || author.trim().isEmpty())
+			throw new InvalidBookException("woilah", title, "author");
+		if (author.split("\\s+")[0] == author.split("\\s+")[1])
+			throw new InvalidBookException("woilah", title, "author");
+		if (publicationYear < 1000 || publicationYear > java.time.Year.now().getValue())
+			throw new InvalidBookException("woilah", title, "publicationYear");
+		if (copies < 0)
+			throw new InvalidBookException("woilah", title, "copies");
+		if (!isValidISBN(isbn))
+			throw new InvalidBookException("woilah", title, "isbn");
+
+		this.title = title.trim();
+		this.author = author.trim();
+		this.isbn = isbn.trim();
+		this.publicationYear = publicationYear;
+		availableCopies = copies;
+	}
+
+	private boolean isValidISBN(String isbn) {
+		if (isbn == null)
+			return false;
+		String cleanISBN = isbn.replaceAll("[\\s-]", "");
+
+		if (isbn.length() == 10)
+			return isValidISBN10(cleanISBN);
+		if (isbn.length() == 13)
+			return isValidISBN13(cleanISBN);
+
+		return false;
+	}
+
+	private boolean isValidISBN10(String isbn) {
+		/*
+		 * - boolean isValidISBN10(String isbn)
+		 * ISBN-10 checksum algorithm:
+		 * - Sum = (digit1 × 10) + (digit2 × 9) + ... + (digit9 × 2) + check_digit
+		 * - Check digit bisa 'X' (nilai 10) atau digit 0-9
+		 * - Valid jika Sum % 11 == 0
+		 * Gunakan try-catch untuk handle exceptions, return false jika error
+		 */
+		try {
+			int sum = 0;
+			for (int i = 0; i < 9; i++) {
+				sum += (Character.getNumericValue(isbn.charAt(i)) * (10 - i));
+			}
+			char checkChar = isbn.charAt(9);
+			int checkValue;
+			if (checkChar == 'X') {
+				checkValue = 10;
+			} else {
+				checkValue = Character.getNumericValue(checkChar);
+			}
+			sum += checkValue;
+			return sum % 11 == 0;
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
+	private boolean isValidISBN13(String isbn){
+      /*- boolean isValidISBN13(String isbn)
+     * ISBN-13 checksum algorithm:
+       - Sum = digit1 + (digit2 × 3) + digit3 + (digit4 × 3) + ... + digit13
+       - Digit ganjil (index 0,2,4...) × 1, digit genap (index 1,3,5...) × 3
+       - Valid jika Sum % 10 == 0
+     * Gunakan try-catch, return false jika error */
+	try {
+		int sum = 0;
+		for (int i = 0; i < 13; i++){
+			int dig = Character.getNumericValue(isbn.charAt(i));
+			if (dig % 2 == 0){
+				dig *= 3;
+			}
+		}
+		return sum % 10 == 0;
+	} catch (Exception e){
+		return false;
+	}
+  }
+
+// TODO: Implement private helper methods untuk ISBN validation
+
+// TODO: Implement getters
+// - getters untuk semua fields (getTitle, getAuthor, getIsbn,
+// getPublicationYear, getCopies, getAvailableCopies)
+	public String getTitle(){
+		return title;
+	}
+
+	public String getAuthor(){
+		return author;
+	}
+
+	public String getIsbn(){
+		return isbn;
+	}
+
+	public int getPublicationYear(){
+		return publicationYear;
+	}
+
+	public int getCopies(){
+		return copies;
+	}
+
+	public int getAvailableCopies(){
+		return availableCopies;
+	}
+
+    // TODO: Implement borrowBook()
+	/*- void borrowBook() throws BookNotAvailableException
+     * Jika availableCopies <= 0: throw BookNotAvailableException dengan detail (title, requestedCopies=1, availableCopies)
+     * Kurangi availableCopies */
+	public void borrowBook() throws BookNotAvailableException{
+		if (getAvailableCopies() <= 0) throw new BookNotAvailableException("abis", getTitle(), 1, getAvailableCopies());
+		availableCopies--;
+	}
+    // TODO: Implement returnBook()
+	/* - void returnBook() throws InvalidBookException
+     * Jika availableCopies >= copies: throw InvalidBookException
+     * Tambah availableCopies*/
+	public void returnBook() throws InvalidBookException{
+		if (getAvailableCopies() >= getCopies()) throw new InvalidBookException("apalah", getTitle(), "availableCopies");
+		availableCopies++;
+	}
+
+    // TODO: Implement toString()
+	/*- toString(): return format string
      * Format EXACT (abaikan simbol <>): "<title> by <author> (<year>) [ISBN: <isbn>] - Available: <avail>/<total>"
      * <title> = judul buku
      * <author> = nama penulis
@@ -68,21 +199,8 @@
      * <avail> = availableCopies
      * <total> = copies
      * Contoh: "Clean Code by Robert Martin (2008) [ISBN: 0-13-235088-2] - Available: 3/5"
-     * Contoh: "Design Patterns by Gang of Four (1994) [ISBN: 978-0-201-63361-0] - Available: 2/2"
-*/
-
-public class Book {
-    // TODO: Declare fields
-
-    // TODO: Implement constructor dengan validasi lengkap
-
-    // TODO: Implement private helper methods untuk ISBN validation
-
-    // TODO: Implement getters
-
-    // TODO: Implement borrowBook()
-
-    // TODO: Implement returnBook()
-
-    // TODO: Implement toString()
+     * Contoh: "Design Patterns by Gang of Four (1994) [ISBN: 978-0-201-63361-0] - Available: 2/2" */
+	public String toString(){
+		return String.format("%s by %s (%d) [ISBN: %s] - Available: %d/%d", getTitle(), getAuthor(), getPublicationYear(), getIsbn(), getAvailableCopies(), getCopies());
+	}
 }
