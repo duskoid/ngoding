@@ -25,87 +25,15 @@ import java.util.Map;
       * Loop books array, bandingkan ISBN
       * Return book jika ditemukan, null jika tidak
 
-   6. void borrowBook(String memberId, String bookTitle) throws LibraryException
-      PENTING: Method ini harus menggunakan try-catch-finally!
+   6. 
 
-      * Declare: Member member = null, Book book = null
-      * Try block:
-        - member = findMember(memberId)
-        - book = findBook(bookTitle)
-        - Jika book == null: throw BookNotAvailableException (buku tidak ditemukan)
-        - member.borrowBook(bookTitle) - ini bisa throw LibraryException
-        - book.borrowBook() - ini bisa throw BookNotAvailableException
+   7. 
 
-      * Catch blocks (PENTING: Gunakan dua catch blocks terpisah, bukan multi-catch, karena BookNotAvailableException adalah subclass dari LibraryException):
-        catch (BookNotAvailableException e)
-        - Re-throw exception
-        catch (LibraryException e)
-        - Re-throw exception
+   8. 
 
-      * Finally block:
-        - WAJIB PRINT: "Transaction attempt completed for: " + member.getName()
-        - Hanya print jika member != null
-        - Format EXACT: "Transaction attempt completed for: <nama member tanpa <> >"
-        - Contoh: "Transaction attempt completed for: Alice Johnson"
+   9. 
 
-   7. void returnBook(String memberId, String bookTitle) throws LibraryException
-      PENTING: Gunakan try-catch-finally pattern seperti borrowBook!
-
-      * Declare: Member member = null, Book book = null
-      * Try:
-        - member = findMember(memberId)
-        - book = findBook(bookTitle)
-        - Jika book == null: throw InvalidBookException
-        - member.returnBook(bookTitle)
-        - book.returnBook()
-
-      * Catch blocks (PENTING: Gunakan dua catch blocks terpisah):
-        catch (InvalidBookException e)
-        - Re-throw
-        catch (LibraryException e)
-        - Re-throw
-
-      * Finally:
-        - WAJIB PRINT: "Return transaction completed for: " + member.getName()
-        - Hanya print jika member != null
-        - Format EXACT: "Return transaction completed for: <nama member tanpa <> >"
-        - Contoh: "Return transaction completed for: Bob Smith"
-
-   8. void displayAllBooks()
-      * Jika bookCount == 0:
-        - WAJIB PRINT EXACT: "Perpustakaan kosong."
-      * Else:
-        - WAJIB PRINT EXACT: "=== Daftar Buku di Perpustakaan ==="
-        - Loop dan print setiap buku dengan format: "<nomor>. <book.toString()>"
-        - Nomor mulai dari 1
-        - Contoh output:
-          === Daftar Buku di Perpustakaan ===
-          1. Clean Code by Robert Martin (2008) [ISBN: 0-13-235088-2] - Available: 3/3
-          2. Design Patterns by Gang of Four (1994) [ISBN: 978-0-201-63361-0] - Available: 2/2
-
-   9. void displayAllMembers()
-      * Jika members.isEmpty():
-        - WAJIB PRINT EXACT: "Tidak ada anggota terdaftar."
-      * Else:
-        - WAJIB PRINT EXACT: "=== Daftar Anggota Perpustakaan ==="
-        - Loop members.values() dan print setiap member dengan format: "<nomor>. <member.toString()>"
-        - Nomor mulai dari 1
-        - Contoh output:
-          === Daftar Anggota Perpustakaan ===
-          1. Alice Johnson (ID: M001) - Borrowed: 2/3
-          2. Bob Smith (ID: M002) - Borrowed: 0/5
-
-   10. void displayMemberBooks(String memberId) throws LibraryException
-       * member = findMember(memberId)
-       * WAJIB PRINT EXACT: "=== Buku yang Dipinjam oleh " + member.getName() + " ==="
-       * Jika getCurrentBorrowedCount() == 0:
-         - WAJIB PRINT EXACT: "Tidak ada buku yang dipinjam."
-       * Else:
-         - Loop dan print setiap buku dengan format: "- <judul buku>"
-       * Contoh output:
-         === Buku yang Dipinjam oleh Alice Johnson ===
-         - Clean Code
-         - Design Patterns
+   10. 
 
    11. int getBookCount(): return bookCount
    12. int getMemberCount(): return members.size()
@@ -178,7 +106,167 @@ public class Library {
       * Return book jika ditemukan, null jika tidak */
 		if (title == null) return null;
 		for (Book b : books){
-			if (b.)
+			if (b.getTitle().equalsIgnoreCase(title)){
+        return b;
+      }
+		}
+    return null;
+	}
+
+  public void borrowBook(String memberId, String bookTitle) throws LibraryException{
+    /* PENTING: Method ini harus menggunakan try-catch-finally!
+
+      * Declare: Member member = null, Book book = null
+      * Try block:
+        - member = findMember(memberId)
+        - book = findBook(bookTitle)
+        - Jika book == null: throw BookNotAvailableException (buku tidak ditemukan)
+        - member.borrowBook(bookTitle) - ini bisa throw LibraryException
+        - book.borrowBook() - ini bisa throw BookNotAvailableException
+
+      * Catch blocks (PENTING: Gunakan dua catch blocks terpisah, bukan multi-catch, karena BookNotAvailableException adalah subclass dari LibraryException):
+        catch (BookNotAvailableException e)
+        - Re-throw exception
+        catch (LibraryException e)
+        - Re-throw exception
+
+      * Finally block:
+        - WAJIB PRINT: "Transaction attempt completed for: " + member.getName()
+        - Hanya print jika member != null
+        - Format EXACT: "Transaction attempt completed for: <nama member tanpa <> >"
+        - Contoh: "Transaction attempt completed for: Alice Johnson" */
+    Member m = null;
+    Book b = null;
+
+    try{
+      m = findMember(memberId);
+      b = findBook(bookTitle);
+      if (b == null) throw new BookNotAvailableException("buku tidak ditemukan");
+      m.borrowBook(bookTitle);
+      b.borrowBook();
+    } catch (BookNotAvailableException e){
+      throw e;
+    } catch (LibraryException e){
+      throw e;
+    } finally {
+      if (m != null){
+        System.out.println("Transaction attempt completed for: " + m.getName());
+      }
+    }
+  }
+
+  public void returnBook(String memberId, String bookTitle) throws LibraryException{
+      /*PENTING: Gunakan try-catch-finally pattern seperti borrowBook!
+
+      * Declare: Member member = null, Book book = null
+      * Try:
+        - member = findMember(memberId)
+        - book = findBook(bookTitle)
+        - Jika book == null: throw InvalidBookException
+        - member.returnBook(bookTitle)
+        - book.returnBook()
+
+      * Catch blocks (PENTING: Gunakan dua catch blocks terpisah):
+        catch (InvalidBookException e)
+        - Re-throw
+        catch (LibraryException e)
+        - Re-throw
+
+      * Finally:
+        - WAJIB PRINT: "Return transaction completed for: " + member.getName()
+        - Hanya print jika member != null
+        - Format EXACT: "Return transaction completed for: <nama member tanpa <> >"
+        - Contoh: "Return transaction completed for: Bob Smith"*/
+    Member m = null;
+    Book b = null;
+    try {
+      m = findMember(memberId);
+      b = findBook(bookTitle);
+      if (b == null) throw new InvalidBookException("buku tidak ada");
+      m.returnBook(bookTitle);
+      b.returnBook();
+    } catch (InvalidBookException e){
+      throw e;
+    } catch (LibraryException e){
+      throw e;
+    } finally {
+      if (m != null){
+        System.out.println("Return transaction completed for: " + m.getName());
+      }
+    }
+  }
+
+  public void displayAllBooks(){
+    /* Jika bookCount == 0:
+        - WAJIB PRINT EXACT: "Perpustakaan kosong."
+      * Else:
+        - WAJIB PRINT EXACT: "=== Daftar Buku di Perpustakaan ==="
+        - Loop dan print setiap buku dengan format: "<nomor>. <book.toString()>"
+        - Nomor mulai dari 1
+        - Contoh output:
+          === Daftar Buku di Perpustakaan ===
+          1. Clean Code by Robert Martin (2008) [ISBN: 0-13-235088-2] - Available: 3/3
+          2. Design Patterns by Gang of Four (1994) [ISBN: 978-0-201-63361-0] - Available: 2/2 */
+    if (bookCount == 0){
+      System.out.println("Perpustakaan kosong");
+    } else {
+      System.out.println("=== Daftar Buku di Perpustakaan ===");
+      for (int i = 0; i < bookCount; i++){
+        System.out.printf("%d. %s", i+1, books[i].toString());
+      }
+    }
+  }
+   
+  public void displayAllMembers(){
+      /* Jika members.isEmpty():
+        - WAJIB PRINT EXACT: "Tidak ada anggota terdaftar."
+      * Else:
+        - WAJIB PRINT EXACT: "=== Daftar Anggota Perpustakaan ==="
+        - Loop members.values() dan print setiap member dengan format: "<nomor>. <member.toString()>"
+        - Nomor mulai dari 1
+        - Contoh output:
+          === Daftar Anggota Perpustakaan ===
+          1. Alice Johnson (ID: M001) - Borrowed: 2/3
+          2. Bob Smith (ID: M002) - Borrowed: 0/5 */
+	if (members.isEmpty()){
+		System.out.println("Tidak ada anggota terdaftar.");
+	} else {
+		System.out.println("=== Daftar Anggota Perpustakaan ===");
+		int i = 1;
+		for (Member m : members.values()){
+			System.out.printf("%d. %s", i, m.toString());
+			i++;
 		}
 	}
+  }
+
+  public void displayMemberBooks(String memberId) throws LibraryException{
+    /* member = findMember(memberId)
+    * WAJIB PRINT EXACT: "=== Buku yang Dipinjam oleh " + member.getName() + " ==="
+    * Jika getCurrentBorrowedCount() == 0:
+    - WAJIB PRINT EXACT: "Tidak ada buku yang dipinjam."
+    * Else:
+    - Loop dan print setiap buku dengan format: "- <judul buku>"
+    * Contoh output:
+    === Buku yang Dipinjam oleh Alice Johnson ===
+    - Clean Code
+    - Design Patterns*/
+	Member m = findMember(memberId);
+	System.out.println("=== Buku yang Dipinjam oleh " + m.getName() + " ===");
+	if (m.getCurrentBorrowedCount() == 0){
+		System.out.println("Tidak ada buku yang dipinjam");
+	} else {
+		for (String s : m.getBorrowedBooks()){
+			System.out.println("- " + s);
+		}
+	}
+  }
+
+  public int getBookCount(){
+	return bookCount;
+  }
+
+  public int getMemberCount(){
+	return members.size();
+  }
 }
