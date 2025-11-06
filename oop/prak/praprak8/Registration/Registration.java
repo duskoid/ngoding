@@ -1,3 +1,5 @@
+import java.util.regex.Pattern;
+
 public class Registration {
     public Student registerStudent(String name, int age, String password)
             throws InvalidNameException, InvalidAgeException, WeakPasswordException {
@@ -7,7 +9,11 @@ public class Registration {
         // 3. Panggil validatePassword untuk memverifikasi parameter password.
         // 4. Jika semua validasi lolos, buat dan kembalikan objek Student baru
         // dengan data yang diberikan.
-        throw new UnsupportedOperationException("Belum diimplementasikan");
+        validateName(name);
+        validateAge(age);
+        validatePassword(password);
+        Student s = new Student(name, age, password);
+        return s;
     }
 
     private void validateName(String name) throws InvalidNameException {
@@ -16,7 +22,8 @@ public class Registration {
         // karakter.
         // 2. Jika tidak valid, lempar InvalidNameException dengan pesan persis "Nama
         // harus minimal 3 karakter!".
-        throw new UnsupportedOperationException("Belum diimplementasikan");
+        if (name.trim().length() < 3)
+            throw new InvalidNameException("Nama harus minimal 3 karakter!");
     }
 
     private void validateAge(int age) throws InvalidAgeException {
@@ -24,7 +31,8 @@ public class Registration {
         // 1. Periksa apakah age bernilai kurang dari 13.
         // 2. Jika tidak valid, lempar InvalidAgeException dengan pesan persis "Umur
         // harus minimal 13 tahun!".
-        throw new UnsupportedOperationException("Belum diimplementasikan");
+        if (age < 13)
+            throw new InvalidAgeException("Umur harus minimal 13 tahun!");
     }
 
     private void validatePassword(String password) throws WeakPasswordException {
@@ -33,6 +41,6 @@ public class Registration {
         // tidak mengandung digit (gunakan regex atau loop).
         // 2. Jika tidak valid, lempar WeakPasswordException dengan pesan persis
         // "Password harus minimal 6 karakter dan mengandung angka!".
-        throw new UnsupportedOperationException("Belum diimplementasikan");
+        if (password == null || password.length() < 6 || !(Pattern.compile("\\d").matcher(password).find())) throw new WeakPasswordException("Password harus minimal 6 karakter dan mengandung angka!");
     }
 }
