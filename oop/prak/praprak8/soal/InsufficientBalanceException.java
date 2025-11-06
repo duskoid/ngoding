@@ -5,4 +5,7 @@
    Contoh pesan: "Saldo tidak mencukupi untuk melakukan penarikan." */
 public class InsufficientBalanceException extends Exception {
     // Type your code
+    public InsufficientBalanceException(String message){
+        super(message);
+    }
 }

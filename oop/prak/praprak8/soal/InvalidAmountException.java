@@ -5,4 +5,7 @@
    Contoh pesan: "Nominal transaksi tidak boleh negatif." */
 public class InvalidAmountException extends Exception {
     // Type your code
+    public InvalidAmountException(String message){
+        super(message);
+    }
 }

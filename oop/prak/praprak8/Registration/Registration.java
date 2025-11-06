@@ -1,5 +1,3 @@
-import java.util.regex.Pattern;
-
 public class Registration {
     public Student registerStudent(String name, int age, String password)
             throws InvalidNameException, InvalidAgeException, WeakPasswordException {
@@ -22,7 +20,7 @@ public class Registration {
         // karakter.
         // 2. Jika tidak valid, lempar InvalidNameException dengan pesan persis "Nama
         // harus minimal 3 karakter!".
-        if (name.trim().length() < 3)
+        if (name.trim() == null || name.trim().isEmpty() || name.trim().length() < 3)
             throw new InvalidNameException("Nama harus minimal 3 karakter!");
     }
 
@@ -41,6 +39,14 @@ public class Registration {
         // tidak mengandung digit (gunakan regex atau loop).
         // 2. Jika tidak valid, lempar WeakPasswordException dengan pesan persis
         // "Password harus minimal 6 karakter dan mengandung angka!".
-        if (password == null || password.length() < 6 || !(Pattern.compile("\\d").matcher(password).find())) throw new WeakPasswordException("Password harus minimal 6 karakter dan mengandung angka!");
+        Boolean containsDigit = false;
+        for (int i = 0; i < password.length(); i++){
+            if (Character.isDigit(password.charAt(i))){
+                containsDigit = true;
+                break;
+            }
+        }
+        if (password == null || password.length() < 6 || !containsDigit) 
+            throw new WeakPasswordException("Password harus minimal 6 karakter dan mengandung angka!");
     }
 }
