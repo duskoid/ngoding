@@ -124,16 +124,14 @@ public class OrderingSystem {
       throws ItemNotFoundException, OutOfStockException, InvalidQuantityException,
       InsufficientBalanceException, CustomerNotFoundException, OrderLimitExceededException {
       Customer c = findCustomer(customerName);
-      for (int j = 0; j < quantity; j++){
-        c.incrementOrderCount();
-      }
+      c.incrementOrderCount();
       Item i = findItem(itemName);
       double hargaTotal = i.getFinalPrice() * quantity;
       c.deductBalance(hargaTotal);
       try {
         i.reduceStock(quantity);
         System.out.println("Pesanan berhasil! " + customerName + " membeli " + quantity + " " + itemName + " seharga Rp" + hargaTotal);
-      } catch (OutOfStockException e){
+      } catch (OutOfStockException | InvalidQuantityException e){
         c.addBalance(hargaTotal);
         throw e;
       }
