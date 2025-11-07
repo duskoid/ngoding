@@ -53,7 +53,7 @@ public class BankSystem {
         } else {
             System.out.println("Daftar Akun:"); 
             for (int i = 0; i < count; i++){
-                System.out.printf("- %s - Saldo: Rp%.01f\n", accounts[i].getOwner(), accounts[i].getBalance());
+                System.out.println(accounts[i].toString());
             }
         }
     }
