@@ -116,11 +116,11 @@ public class Member {
 		if (getBorrowedBooks().contains(bookTitle)){
 			throw new LibraryException(String.format("Anggota %s sudah meminjam buku '%s'.", getName(), bookTitle), "ALREADY_BORROWED");
 		}
-		if (!(getCurrentBorrowedCount() <= getMaxBorrowLimit())){
+		if (getCurrentBorrowedCount() >= getMaxBorrowLimit()){
 			throw new LibraryException(String.format("Anggota %s telah mencapai batas peminjaman (%d/%d).", getName(), getCurrentBorrowedCount(), getMaxBorrowLimit()), "LIMIT_EXCEEDED");
 		}
 		
-		getBorrowedBooks().add(bookTitle);
+		borrowedBooks.add(bookTitle);
 	}
 
 	public void returnBook(String bookTitle) throws LibraryException{
@@ -128,7 +128,8 @@ public class Member {
 			throw new LibraryException(String.format("Anggota %s tidak meminjam buku '%s'.", getName(), bookTitle), "NOT_BORROWED");
 		}
 
-	}
+		borrowedBooks.remove(bookTitle);
+	}	
 
 	public boolean hasBorrowedBook(String bookTitle){
 		return borrowedBooks.contains(bookTitle);

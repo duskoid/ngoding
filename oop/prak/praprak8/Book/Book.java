@@ -62,26 +62,23 @@ public class Book {
 	// TODO: Implement constructor dengan validasi lengkap
 	public Book(String title, String author, String isbn, int publicationYear, int copies) throws InvalidBookException {
 		if (title == null || title.trim().isEmpty())
-			throw new InvalidBookException("Title must not be empty", title, "title");
+			throw new InvalidBookException("anuan", title, "title");
 		if (author == null || author.trim().isEmpty())
-			throw new InvalidBookException("Author must not be empty", title, "author");
-		String[] authorParts = author.trim().split("\\s+");
-		if (authorParts.length < 2)
-			throw new InvalidBookException("Author must contain at least two names", title, "author", author);
-		int currentYear = java.time.Year.now().getValue();
-		if (publicationYear < 1000 || publicationYear > currentYear)
-			throw new InvalidBookException("Publication year out of range", title, "publicationYear", String.valueOf(publicationYear));
+			throw new InvalidBookException("woilah", title, "author");
+		if (author.split("\\s+")[1].isEmpty())
+			throw new InvalidBookException("woilah", title, "author");
+		if (publicationYear < 1000 || publicationYear > java.time.Year.now().getValue())
+			throw new InvalidBookException("woilah", title, "publicationYear");
 		if (copies < 0)
-			throw new InvalidBookException("Copies cannot be negative", title, "copies", String.valueOf(copies));
+			throw new InvalidBookException("woilah", title, "copies");
 		if (!isValidISBN(isbn))
-			throw new InvalidBookException("Invalid ISBN", title, "isbn", isbn);
+			throw new InvalidBookException("woilah", title, "isbn");
 
 		this.title = title.trim();
 		this.author = author.trim();
-		this.isbn = (isbn == null ? null : isbn.trim());
+		this.isbn = isbn.trim();
 		this.publicationYear = publicationYear;
-		this.copies = copies;
-		this.availableCopies = copies;
+		availableCopies = copies;
 	}
 
 	private boolean isValidISBN(String isbn) {
@@ -89,9 +86,9 @@ public class Book {
 			return false;
 		String cleanISBN = isbn.replaceAll("[\\s-]", "");
 
-		if (cleanISBN.length() == 10)
+		if (isbn.length() == 10)
 			return isValidISBN10(cleanISBN);
-		if (cleanISBN.length() == 13)
+		if (isbn.length() == 13)
 			return isValidISBN13(cleanISBN);
 
 		return false;
@@ -109,20 +106,14 @@ public class Book {
 		try {
 			int sum = 0;
 			for (int i = 0; i < 9; i++) {
-				char c = isbn.charAt(i);
-				if (!Character.isDigit(c))
-					return false;
-				int val = Character.getNumericValue(c);
-				sum += val * (10 - i);
+				sum += (Character.getNumericValue(isbn.charAt(i)) * (10 - i));
 			}
 			char checkChar = isbn.charAt(9);
 			int checkValue;
-			if (checkChar == 'X' || checkChar == 'x') {
+			if (checkChar == 'X') {
 				checkValue = 10;
-			} else if (Character.isDigit(checkChar)) {
-				checkValue = Character.getNumericValue(checkChar);
 			} else {
-				return false;
+				checkValue = Character.getNumericValue(checkChar);
 			}
 			sum += checkValue;
 			return sum % 11 == 0;
@@ -141,15 +132,9 @@ public class Book {
 		try {
 			int sum = 0;
 			for (int i = 0; i < 13; i++) {
-				char c = isbn.charAt(i);
-				if (!Character.isDigit(c)) {
-					return false;
-				}
-				int dig = Character.getNumericValue(c);
-				if (i % 2 == 0) {
-					sum += dig;
-				} else {
-					sum += dig * 3;
+				int dig = Character.getNumericValue(isbn.charAt(i));
+				if (dig % 2 == 0) {
+					dig *= 3;
 				}
 			}
 			return sum % 10 == 0;

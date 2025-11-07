@@ -53,7 +53,7 @@ public class BankSystem {
         } else {
             System.out.println("Daftar Akun:"); 
             for (int i = 0; i < count; i++){
-                System.out.println(accounts[i].toString());
+                System.out.println("- " + accounts[i].toString());
             }
         }
     }

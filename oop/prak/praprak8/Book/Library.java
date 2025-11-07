@@ -20,10 +20,7 @@ import java.util.Map;
 
    4. 
 
-   5. Book findBookByISBN(String isbn) throws InvalidBookException
-      * Jika isbn null/kosong: throw InvalidBookException
-      * Loop books array, bandingkan ISBN
-      * Return book jika ditemukan, null jika tidak
+   5. 
 
    6. 
 
@@ -196,6 +193,14 @@ public class Library {
     }
   }
 
+  public Book findBookByISBN(String isbn) throws InvalidBookException{
+    /** Jika isbn null/kosong: throw InvalidBookException
+      * Loop books array, bandingkan ISBN
+      * Return book jika ditemukan, null jika tidak */
+    if (isbn == null || isbn.trim().isEmpty()) throw new InvalidBookException("gaada ini");
+  }
+      
+
   public void displayAllBooks(){
     /* Jika bookCount == 0:
         - WAJIB PRINT EXACT: "Perpustakaan kosong."
@@ -208,11 +213,11 @@ public class Library {
           1. Clean Code by Robert Martin (2008) [ISBN: 0-13-235088-2] - Available: 3/3
           2. Design Patterns by Gang of Four (1994) [ISBN: 978-0-201-63361-0] - Available: 2/2 */
     if (bookCount == 0){
-      System.out.println("Perpustakaan kosong");
+      System.out.println("Perpustakaan kosong.");
     } else {
       System.out.println("=== Daftar Buku di Perpustakaan ===");
       for (int i = 0; i < bookCount; i++){
-        System.out.printf("%d. %s", i+1, books[i].toString());
+        System.out.printf("%d. %s\n", i+1, books[i].toString());
       }
     }
   }
@@ -234,7 +239,7 @@ public class Library {
 		System.out.println("=== Daftar Anggota Perpustakaan ===");
 		int i = 1;
 		for (Member m : members.values()){
-			System.out.printf("%d. %s", i, m.toString());
+			System.out.printf("%d. %s\n", i, m.toString());
 			i++;
 		}
 	}
@@ -254,7 +259,7 @@ public class Library {
 	Member m = findMember(memberId);
 	System.out.println("=== Buku yang Dipinjam oleh " + m.getName() + " ===");
 	if (m.getCurrentBorrowedCount() == 0){
-		System.out.println("Tidak ada buku yang dipinjam");
+		System.out.println("Tidak ada buku yang dipinjam.");
 	} else {
 		for (String s : m.getBorrowedBooks()){
 			System.out.println("- " + s);
