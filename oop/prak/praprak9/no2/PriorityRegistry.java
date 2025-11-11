@@ -21,7 +21,7 @@ public class PriorityRegistry {
        Kompleksitas: O(log n) untuk pencarian di TreeSet. */
     public boolean removePriority(String name) {
         // Type your code
-        return false;
+        return prioritySet.removeIf(p -> p.getName().equals(name));
     }
 
     /* TODO : Lengkapi method displayPriorityList()
@@ -32,5 +32,9 @@ public class PriorityRegistry {
        Tidak ada nilai kembalian. */
     public void displayPriorityList() {
         // Type your code
+        System.out.println("Priority Patients:");
+        for (Patient p : prioritySet){
+            System.out.printf("- %s\n", p.toString());
+        }
     }
 }
