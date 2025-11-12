@@ -4,10 +4,13 @@ public class Tournament {
     private String tournamentName;
     
     // TODO: Gunakan List untuk urutan tim
+    private List<Team> teams;
     
     // TODO: Gunakan Map untuk quick lookup tim berdasarkan nama
-    
+    private Map<String, Team> teamMap;
+
     // TODO: Gunakan Set untuk track nama-nama tim yang sudah bertanding
+    private Set<Team> playedTeams; 
     
     public Tournament(String tournamentName) {
         this.tournamentName = tournamentName;
@@ -18,6 +21,9 @@ public class Tournament {
     
     // TODO: Buat method registerTeam(GameTeam team)
     // Tambahkan team ke List dan Map
+    public void registerTeam(GameTeam team){
+        
+    }
     
     // TODO: Buat method getTeam(String teamName) return GameTeam
     // Gunakan Map untuk lookup

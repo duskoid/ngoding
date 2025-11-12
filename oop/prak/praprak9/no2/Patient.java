@@ -53,12 +53,12 @@ public class Patient implements Comparable<Patient> {
     public int compareTo(Patient other) {
         // Type your code
         if (this.isCritical() == other.isCritical()){
-            return this.getName().compareTo(other.getName());
+            return this.getName().compareToIgnoreCase(other.getName());
         } else {
             if (this.isCritical()){
-                return 1;
-            } else {
                 return -1;
+            } else {
+                return 1;
             }
         }
     }

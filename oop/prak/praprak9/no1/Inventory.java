@@ -37,6 +37,11 @@ public class Inventory {
    * @param maxWeight
    */
   public Inventory(int rows, int cols, double maxWeight) {
+    this.rows = rows;
+    this.cols = cols;
+    this.maxWeight = maxWeight;
+    initializeGrid();
+    currentWeight = 0;
   }
 
   /**
@@ -47,6 +52,15 @@ public class Inventory {
    * - Set each position to null (indicating empty).
    */
   private void initializeGrid() {
+    grid = new LinkedHashMap<>(cols * rows, (float) maxWeight);
+    char row = 'A'; //initial row
+    for (int i = 0; i < rows; i++){
+      for (int j = 0; j < cols; j++){
+        String key = String.format("%c%d", row, j+1);
+        grid.put(key, null);
+      }
+      row++;
+    }
   }
 
   /**
@@ -60,6 +74,9 @@ public class Inventory {
    * @return key representation of position. e.g. "A1", "B3", etc.
    */
   private String getKey(int row, int col) {
+    char rowChar = 'A';
+    rowChar = (char) (rowChar + row);
+    return String.format("%c%d", rowChar, col+1);
   }
 
   /**
@@ -72,6 +89,7 @@ public class Inventory {
    * @return key validation result
    */
   private boolean isValidKey(String key) {
+    return grid.containsKey(key);
   }
 
   /**
@@ -91,6 +109,14 @@ public class Inventory {
    * @return success status
    */
   public boolean addItem(String position, Item item) {
+    if (position.isEmpty()) return false;
+    if (!isValidKey(position)) return false;
+    if (getCurrentWeight() + item.getWeight() >= getMaxWeight()) return false;
+
+    grid.put(position, item);
+    currentWeight += item.getWeight();
+    System.out.println("Added " + item.getName() + " to position " + position);
+    return true;
   }
 
   /**
@@ -107,6 +133,15 @@ public class Inventory {
    * @return removed item or null if not found
    */
   public Item removeItem(String position) {
+    if (position.isEmpty()) return null;
+    if (!isValidKey(position)) return null;
+
+    if (grid.get(position) != null){
+      Item temp = grid.get(position);
+      grid.remove(position);
+      System.out.println("Removed " + temp.getName() + " from position " + position);
+      return temp;
+    } return null;
   }
 
   /**
@@ -124,6 +159,16 @@ public class Inventory {
    * @return success status
    */
   public boolean moveItem(String from, String to) {
+    if (grid.get(from) == null) return false;
+    Item temp = grid.get(from);
+    
+    if (grid.get(to) != null){
+      grid.put(from, temp);
+      return false;
+    } else {
+      grid.put(to, temp);
+      return true;
+    }
   }
 
   /**
@@ -136,6 +181,7 @@ public class Inventory {
    * @return collection of all items
    */
   public Collection<Item> getAllItems() {
+
   }
 
   /**
@@ -148,6 +194,15 @@ public class Inventory {
    * @return set of occupied positions
    */
   public Set<String> getOccupiedPositions() {
+    Set<String> output = new HashSet<>();
+    char row = 'A';
+    for (int i = 0; i < rows; i++){
+      for (int j = 0; j < cols; j++){
+        output.add(String.format("%c%d", row, j));
+      }
+      row++;
+    }
+    return output;
   }
 
   /**
@@ -162,7 +217,7 @@ public class Inventory {
    * @return Map of positions to items matching the name
    */
   public Map<String, Item> searchByName(String name) {
-  }
+    for (  }
 
   /**
    * Filter by type (using Collection)

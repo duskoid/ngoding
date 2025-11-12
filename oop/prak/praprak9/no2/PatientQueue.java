@@ -1,4 +1,3 @@
-import java.lang.classfile.instruction.ReturnInstruction;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -45,7 +44,7 @@ public class PatientQueue {
        Tidak ada nilai kembalian. */
     public void displayQueue() {
         // Type your code
-        System.out.println("CUrrent Queue:");
+        System.out.println("Current Queue:");
         for (Patient p : queue){
             System.out.printf("- %s\n", p.toString());
         }

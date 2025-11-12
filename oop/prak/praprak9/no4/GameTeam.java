@@ -4,8 +4,10 @@ public class GameTeam implements Team {
     private String teamName;
     
     // TODO: Gunakan List untuk menyimpan urutan anggota team
+    private List<Player> members;
     
     // TODO: Gunakan Map untuk quick lookup member berdasarkan nama
+    private Map<String, Player> memberMap;
     
     public GameTeam(String teamName) {
         this.teamName = teamName;
@@ -16,6 +18,10 @@ public class GameTeam implements Team {
     // TODO: Implement addMember
     // Tambahkan member ke List dan Map
     // Tambahkan role "Player" ke Set
+    public void addMember(TeamMember member){
+        members.add((Player) member);
+        memberMap;
+    }
     
     // TODO: Implement removeMember
     // Cari dan hapus member dari List menggunakan iterator

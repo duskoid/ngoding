@@ -22,7 +22,7 @@ public class PatientHistory {
        Tidak ada nilai kembalian. */
     public void sortByName() {
         // Type your code
-        Collections.sort(history);
+        Collections.sort(history, (p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
     }
 
     /* TODO : Lengkapi method searchByName(String name)
@@ -34,7 +34,7 @@ public class PatientHistory {
     public Patient searchByName(String name) {
         // Type your code
         for (Patient p: history){
-            if (p.getName().equals(name)){
+            if (p.getName().equalsIgnoreCase(name)){
                 return p;
             }
         }
