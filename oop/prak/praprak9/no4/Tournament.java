@@ -49,7 +49,7 @@ public class Tournament {
     // Return team yang belum bertanding (tidak ada di Set playedTeams)
     public List<String> getTeamsNotPlayed() {
         List<String> notPlayed = new ArrayList<>();
-        for (GameTeam g : teams) {
+        for (GameTeam g : teamMap.values()) {
             if (!playedTeams.contains(g)) {
                 notPlayed.add(g.getTeamName());
             }
@@ -59,6 +59,7 @@ public class Tournament {
 
     // TODO: Buat method getAllTeams() return List<GameTeam>
     public List<GameTeam> getAllTeams() {
-        return teams;
+        List<GameTeam> anu = new ArrayList<>(teams);
+        return anu;
     }
 }

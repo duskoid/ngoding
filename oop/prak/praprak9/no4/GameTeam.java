@@ -18,9 +18,9 @@ public class GameTeam implements Team {
 
     // TODO: Implement addMember
     // Tambahkan member ke List dan Map
-    // Tambahkan role "Player" ke Set
+
     public void addMember(TeamMember member) {
-        members.add((Player) member);
+        members.add(member);
         memberMap.put(member.getName(), member);
     }
 
@@ -44,7 +44,7 @@ public class GameTeam implements Team {
 
     // TODO: Buat method getAllMembers() return List<TeamMember>
     public List<TeamMember> getAllMembers() {
-        return new ArrayList<>(memberMap.values());
+        return new ArrayList<>(members);
     }
 
     // TODO: Buat method getTeamSize() return int
@@ -55,8 +55,8 @@ public class GameTeam implements Team {
     // TODO: Buat method getTopSkillPlayer() return TeamMember
     // Loop melalui List dan cari player dengan skill tertinggi
     public TeamMember getTopSkillPlayer() {
-        TeamMember topSkillPlayer = null;
-        int maxSkill = Integer.MIN_VALUE;
+        TeamMember topSkillPlayer = members.get(0);
+        int maxSkill = 0;
 
         for (TeamMember member : members) {
             if (member.getSkillLevel() > maxSkill) {
@@ -72,6 +72,7 @@ public class GameTeam implements Team {
     // Filter players yang skill-nya >= minSkill
     public List<TeamMember> getPlayersBySkillLevel(int minSkill) {
         List<TeamMember> aboveMin = new ArrayList<>();
+        
         for (TeamMember t : members) {
             if (t.getSkillLevel() >= minSkill) {
                 aboveMin.add(t);
