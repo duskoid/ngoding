@@ -34,7 +34,7 @@ public class PriorityRegistry {
         // Type your code
         System.out.println("Priority Patients:");
         for (Patient p : prioritySet){
-            System.out.printf("- %s\n", p.toString());
+            System.out.printf("- %s (%d) [%s]\n", p.getName(), p.getAge(), p.isCritical());
         }
     }
 }

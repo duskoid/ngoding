@@ -53,7 +53,7 @@ public class Inventory {
      * - Set each position to null (indicating empty).
      */
     private void initializeGrid() {
-        grid = new LinkedHashMap<>(cols * rows, (float) maxWeight);
+        grid = new LinkedHashMap<>(cols * rows);
         char row = 'A'; //initial row
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
@@ -112,12 +112,10 @@ public class Inventory {
     public boolean addItem(String position, Item item) {
         if (position.isEmpty()) return false;
         if (!isValidKey(position)) return false;
-        if (
-            getCurrentWeight() + item.getWeight() >= getMaxWeight()
-        ) return false;
+        if (getCurrentWeight() + item.getWeight() >= getMaxWeight()) return false;
 
         grid.put(position, item);
-        currentWeight += item.getWeight();
+        currentWeight += item.getWeight()*item.getQuantity();
         System.out.println(
             "Added " + item.getName() + " to position " + position
         );
@@ -169,13 +167,14 @@ public class Inventory {
     public boolean moveItem(String from, String to) {
         if (grid.get(from) == null) return false;
         Item temp = grid.get(from);
+        grid.remove(from, temp);
 
-        if (grid.get(to) != null) {
-            grid.put(from, temp);
-            return false;
-        } else {
+        if (grid.get(to) == null) {
             grid.put(to, temp);
             return true;
+        } else {
+            grid.put(from, temp);
+            return false;
         }
     }
 
@@ -212,7 +211,10 @@ public class Inventory {
         char row = 'A';
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
-                output.add(String.format("%c%d", row, j));
+                String key = String.format("%c%d", row, j);
+                if (grid.get(key) != null){
+                    output.add(key);
+                }
             }
             row++;
         }
@@ -235,7 +237,7 @@ public class Inventory {
 
         for (Map.Entry<String, Item> e : grid.entrySet()) {
             if (e.getValue() != null) {
-                if (e.getValue().getName().equalsIgnoreCase(name)) {
+                if (e.getValue().getName().toLowerCase().contains(name.toLowerCase())) {
                     output.put(e.getKey(), e.getValue());
                 }
             }
@@ -401,7 +403,18 @@ public class Inventory {
      *
      * @return List of entries sorted by item quantity
      */
-    public List<Map.Entry<String, Item>> sortByQuantity() {}
+    public List<Map.Entry<String, Item>> sortByQuantity() {
+        List<Map.Entry<String, Item>> output = new ArrayList<>();
+
+        for (Map.Entry<String, Item> e : grid.entrySet()) {
+            if (e.getValue() != null) {
+                output.add(e);
+            }
+        }
+        
+        output.sort((e1, e2) -> e2.getValue().getQuantity() - (e1.getValue().getQuantity()));
+        return output;
+    }
 
     /**
      * Get items by type count (using Collection)
@@ -413,7 +426,17 @@ public class Inventory {
      *
      * @return Map of item types to their counts
      */
-    public Map<String, Long> getTypeStatistics() {}
+    public Map<String, Long> getTypeStatistics() {
+        Collection<Item> anu = getAllItems();
+        Map<String, Long> map = new HashMap<>();
+
+        for (Item i : anu){
+            String type = i.getType();
+            map.put(type, map.getOrDefault(type, 0L) + 1);
+        }
+
+        return map;
+    }
 
     /**
      * Get rarity distribution (using Collection)
@@ -425,7 +448,17 @@ public class Inventory {
      *
      * @return Map of item rarities to their counts
      */
-    public Map<Integer, Long> getRarityDistribution() {}
+    public Map<Integer, Long> getRarityDistribution() {
+        Collection<Item> anu = getAllItems();
+        Map<Integer, Long> map = new HashMap<>();
+
+        for (Item i : anu){
+            int rare = i.getRarity();
+            map.put(rare, map.getOrDefault(rare, 0L) + 1);
+        }
+
+        return map;
+    }
 
     /**
      * Get total quantity by type (using Collection)
@@ -437,7 +470,18 @@ public class Inventory {
      *
      * @return Map of item types to their total quantities
      */
-    public Map<String, Integer> getTotalQuantityByType() {}
+    public Map<String, Integer> getTotalQuantityByType() {
+        Collection<Item> anu = getAllItems();
+        Map<String, Integer> map = new HashMap<>();
+
+        for (Item i : anu){
+            String type = i.getType();
+            int quantity = i.getQuantity();
+            map.put(type, map.getOrDefault(type, 0) + quantity);
+        }
+
+        return map;
+    }
 
     /**
      * Get heaviest items (top N) (using Collection)
@@ -451,7 +495,10 @@ public class Inventory {
      * @param topN
      * @return List of entries of the heaviest items
      */
-    public List<Map.Entry<String, Item>> getHeaviestItems(int topN) {}
+    public List<Map.Entry<String, Item>> getHeaviestItems(int topN) {
+        List<Map.Entry<String, Item>> byWeight = sortByWeight().reversed();
+        return byWeight.subList(0, topN);
+    }
 
     /**
      * Get lightest items (top N) (using Collection)
@@ -465,7 +512,10 @@ public class Inventory {
      * @param topN
      * @return List of entries of the lightest items
      */
-    public List<Map.Entry<String, Item>> getLightestItems(int topN) {}
+    public List<Map.Entry<String, Item>> getLightestItems(int topN) {
+        List<Map.Entry<String, Item>> byWeight = sortByWeight();
+        return byWeight.subList(0, topN);
+    }
 
     /**
      * Get legendary items (rarity 5) (using Collection)
@@ -477,7 +527,17 @@ public class Inventory {
      *
      * @return List of entries of legendary items
      */
-    public List<Map.Entry<String, Item>> getLegendaryItems() {}
+    public List<Map.Entry<String, Item>> getLegendaryItems() {
+        List<Map.Entry<String, Item>> byRarity = new ArrayList<>();
+        for (Map.Entry<String, Item> e : grid.entrySet()){
+            if (e.getValue() != null){
+                if (e.getValue().getRarity() == 5){
+                byRarity.add(e);
+            }
+            }
+        }
+        return byRarity;
+    }
 
     /**
      * Check if inventory has item by name (using Collection)
@@ -491,7 +551,15 @@ public class Inventory {
      * @param itemName
      * @return presence status
      */
-    public boolean hasItem(String itemName) {}
+    public boolean hasItem(String itemName) {
+        Collection<Item> all = getAllItems();
+        for (Item i : all){
+            if (i.getName().equalsIgnoreCase(itemName)){
+                return true;
+            }
+        }
+        return false;
+    }
 
     /**
      * Count total items
@@ -502,7 +570,10 @@ public class Inventory {
      *
      * @return total item count
      */
-    public long countItems() {}
+    public long countItems() {
+        Collection<Item> ow = getAllItems();
+        return ow.size();
+    }
 
     /**
      * Count empty slots
@@ -513,7 +584,15 @@ public class Inventory {
      *
      * @return empty slot count
      */
-    public long countEmptySlots() {}
+    public long countEmptySlots() {
+        long count = 0;
+        for (Item i : grid.values()){
+            if (i == null){
+                count++;
+            }
+        }
+        return count;
+    }
 
     /**
      * Get average weight of items (using Collection)
@@ -525,7 +604,18 @@ public class Inventory {
      *
      * @return average item weight
      */
-    public double getAverageItemWeight() {}
+    public double getAverageItemWeight() {
+        Collection<Item> all = getAllItems();
+        double totWeight = 0;
+        double count = 0;
+        for (Item i : all){
+            if (i != null){
+                totWeight += i.getWeight();
+                count++;
+            }
+        }
+        return totWeight/count;
+    }
 
     /**
      * Get average rarity (using Collection)
@@ -537,7 +627,18 @@ public class Inventory {
      *
      * @return average item rarity
      */
-    public double getAverageRarity() {}
+    public double getAverageRarity() {
+        Collection<Item> all = getAllItems();
+        double totRar = 0;
+        double count = 0;
+        for (Item i : all){
+            if (i != null){
+                totRar += i.getRarity();
+                count++;
+            }
+        }
+        return totRar/count;
+    }
 
     /**
      * Stack similar items (using Collection)
@@ -551,7 +652,47 @@ public class Inventory {
      * - Set others to null by iterating entries inside group except the first one
      * - Print "Stacked X instances of <item_name>" for each stacked item.
      */
-    public void stackSimilarItems() {}
+    public void stackSimilarItems() {
+        Map<String, List<Map.Entry<String, Item>>> groupedItems = new HashMap<>();
+        for (Map.Entry<String, Item> entry : grid.entrySet()) {
+        if (entry.getValue() != null) {
+            String itemName = entry.getValue().getName();
+            
+            if (!groupedItems.containsKey(itemName)) {
+                groupedItems.put(itemName, new ArrayList<>());
+            }
+            groupedItems.get(itemName).add(entry);
+        }
+    }
+    
+    // Process each group
+    for (Map.Entry<String, List<Map.Entry<String, Item>>> group : groupedItems.entrySet()) {
+        String itemName = group.getKey();
+        List<Map.Entry<String, Item>> entries = group.getValue();
+        
+        // Only stack if there's more than one item with the same name
+        if (entries.size() > 1) {
+            // Calculate total quantity
+            int totalQuantity = 0;
+            for (Map.Entry<String, Item> entry : entries) {
+                totalQuantity += entry.getValue().getQuantity();
+            }
+            
+            // Update the first item's quantity
+            entries.get(0).getValue().setQuantity(totalQuantity);
+            
+            // Set all other items to null (remove them)
+            for (int i = 1; i < entries.size(); i++) {
+                String position = entries.get(i).getKey();
+                Item item = entries.get(i).getValue();
+                currentWeight -= item.getWeight();
+                grid.put(position, null);
+            }
+            
+            System.out.println("Stacked " + entries.size() + " instances of " + itemName);
+        }
+    }
+    }
 
     /**
      * Get first empty slot
@@ -562,7 +703,14 @@ public class Inventory {
      *
      * @return key of first empty slot or null if none found
      */
-    public String getFirstEmptySlot() {}
+    public String getFirstEmptySlot() {
+        for (Map.Entry<String, Item> e : grid.entrySet()){
+            if (e.getValue() == null){
+                return e.getKey();
+            }
+        }
+        return null;
+    }
 
     /**
      * Auto-add item to first empty slot
@@ -575,7 +723,15 @@ public class Inventory {
      * @param item
      * @return success status
      */
-    public boolean autoAddItem(Item item) {}
+    public boolean autoAddItem(Item item) {
+        if (getFirstEmptySlot() == null){
+            System.out.println("No empty slots available!");
+            return false;
+        } else {
+            addItem(getFirstEmptySlot(), item);
+            return true;
+        }
+    }
 
     /**
      * Display inventory grid

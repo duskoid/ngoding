@@ -19,11 +19,11 @@ public class Neuron {
         // 2. Tambah total penjumlahan dengan bias
         // 3. Kembalikan hasil dari fungsi activate() dengan inputnya adalah nilai dari
         // poin (2)
-        double x = 0;
+        double total = 0;
         for (int i = 0; i < weights.size(); i++){
-            x += (weights.get(i) * inputs.get(i));
+            total += (weights.get(i) * inputs.get(i));
         }
-        x += bias;
-        return activation.activate(x);
+        total += bias;
+        return activation.activate(total);
     }
 }
