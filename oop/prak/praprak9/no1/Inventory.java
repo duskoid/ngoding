@@ -333,15 +333,15 @@ public class Inventory {
      * @return List of entries sorted by item name
      */
     public List<Map.Entry<String, Item>> sortByName() {
-        Map<String, Item> output = new LinkedHashMap<>();
+        List<Map.Entry<String, Item>> output = new ArrayList<>();
 
         for (Map.Entry<String, Item> e : grid.entrySet()) {
             if (e.getValue() != null) {
-                if (e.getValue().getName().equalsIgnoreCase(name)) {
-                    output.put(e.getKey(), e.getValue());
-                }
+                output.add(e);
             }
         }
+        
+        output.sort((e1, e2) -> e1.getValue().getName().compareTo(e2.getValue().getName()));
         return output;
     }
 
@@ -355,7 +355,18 @@ public class Inventory {
      *
      * @return List of entries sorted by item rarity
      */
-    public List<Map.Entry<String, Item>> sortByRarity() {}
+    public List<Map.Entry<String, Item>> sortByRarity() {
+        List<Map.Entry<String, Item>> output = new ArrayList<>();
+
+        for (Map.Entry<String, Item> e : grid.entrySet()) {
+            if (e.getValue() != null) {
+                output.add(e);
+            }
+        }
+        
+        output.sort((e1, e2) -> e2.getValue().getRarity() - e1.getValue().getRarity());
+        return output;
+    }
 
     /**
      * Sort items by weight (using Collection)
@@ -367,7 +378,18 @@ public class Inventory {
      *
      * @return List of entries sorted by item weight
      */
-    public List<Map.Entry<String, Item>> sortByWeight() {}
+    public List<Map.Entry<String, Item>> sortByWeight() {
+        List<Map.Entry<String, Item>> output = new ArrayList<>();
+
+        for (Map.Entry<String, Item> e : grid.entrySet()) {
+            if (e.getValue() != null) {
+                output.add(e);
+            }
+        }
+        
+        output.sort((e1, e2) -> Double.compare(e1.getValue().getWeight(), e2.getValue().getWeight()));
+        return output;
+    }
 
     /**
      * Sort items by quantity (using Collection)
