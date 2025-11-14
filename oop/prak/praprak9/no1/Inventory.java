@@ -166,16 +166,13 @@ public class Inventory {
      */
     public boolean moveItem(String from, String to) {
         if (grid.get(from) == null) return false;
-        Item temp = grid.get(from);
-        grid.remove(from, temp);
+        
+        if (grid.get(to) != null) return false;
 
-        if (grid.get(to) == null) {
-            grid.put(to, temp);
-            return true;
-        } else {
-            grid.put(from, temp);
-            return false;
-        }
+        Item temp = removeItem(from);
+        grid.put(to, temp);
+        grid.put(from, null);
+        return true;
     }
 
     /**
